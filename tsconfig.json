@@ -7,11 +7,7 @@
         "strictPropertyInitialization": false,
         "moduleResolution": "node",
         "baseUrl": ".",
-        "paths": {
-            "@nger/cache": [
-                "packages/core/lib/index.ts"
-            ]
-        },
+        "paths": {},
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,

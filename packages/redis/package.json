@@ -1,6 +1,6 @@
 {
     "name": "@nger/cache.redis",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "> TODO: description",
     "author": "imeepos <1037483576@qq.com>",
     "homepage": "https://github.com/meepobrother/nger-cache#readme",
@@ -29,7 +29,7 @@
         "url": "https://github.com/meepobrother/nger-cache/issues"
     },
     "dependencies": {
-        "@nger/core": "^1.8.7",
+        "@nger/core": "^1.8.12",
         "redis": "^2.8.0"
     },
     "devDependencies": {

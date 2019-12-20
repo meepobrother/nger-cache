@@ -2,11 +2,11 @@
     "name": "root",
     "private": true,
     "devDependencies": {
-        "lerna": "^3.13.1",
-        "@types/redis": "^2.8.14"
+        "@types/redis": "^2.8.14",
+        "lerna": "^3.13.1"
     },
     "dependencies": {
-        "@nger/core": "^1.8.7",
+        "@nger/core": "^1.8.12",
         "redis": "^2.8.0"
     }
 }

@@ -1,12 +1,11 @@
-import { Module, ModuleWithProviders, InjectionToken, Injector } from '@nger/core';
-import { CacheStore, CACHE_MANAGER_OPTION } from '@nger/cache';
+import { Module, ModuleWithProviders, InjectionToken, Injector, CacheStore, CACHE_MANAGER_OPTION } from '@nger/core';
 import { createClient, RedisClient, ClientOpts } from 'redis';
 import { RedisCache } from './cache';
 @Module({})
-export class RedisModule {
+export class CacheRedisModule {
     static forFeature(options: ClientOpts | InjectionToken<ClientOpts>): ModuleWithProviders {
         return {
-            ngModule: RedisModule,
+            ngModule: CacheRedisModule,
             providers: [{
                 provide: CacheStore,
                 useFactory: (client: RedisClient) => {

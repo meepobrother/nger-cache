@@ -1,4 +1,4 @@
-import { CacheStore, CacheStoreSetOptions, CacheManagerOptions } from '@nger/cache';
+import { CacheStore, CacheStoreSetOptions, CacheManagerOptions } from '@nger/core';
 import { RedisClient } from 'redis';
 export interface RedisCacheOptions extends CacheManagerOptions {
     host: string;

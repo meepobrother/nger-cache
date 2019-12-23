@@ -22,5 +22,12 @@
   },
   "bugs": {
     "url": "https://github.com/zzh948498/nger-cache/issues"
+  },
+  "dependencies": {
+    "@nger/core": "^1.8.20",
+    "fs-extra": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^8.0.1"
   }
 }

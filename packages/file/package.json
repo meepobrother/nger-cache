@@ -1,11 +1,16 @@
 {
   "name": "@nger/cache.file",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "> TODO: description",
   "author": "zzh948498 <zhang948498@163.com>",
   "homepage": "https://github.com/zzh948498/nger-cache#readme",
   "license": "ISC",
-  "main": "lib/file.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org/",
+    "access": "public"
+},
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -24,7 +29,7 @@
     "url": "https://github.com/zzh948498/nger-cache/issues"
   },
   "dependencies": {
-    "@nger/core": "^1.8.20",
+    "@nger/core": "^1.8.31",
     "fs-extra": "^8.1.0"
   },
   "devDependencies": {

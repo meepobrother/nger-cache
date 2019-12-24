@@ -28,11 +28,11 @@ export class PGCache implements CacheStore {
                 const now = new Date();
                 const ttl = (this.option.ttl || 60 * 5) * 1000;
                 const endTime = new Date(now.getTime() + ttl).toString()
-                const item = await repository.findOne(key);
-
+                // 删除过期数据
                 await repository.createQueryBuilder().delete()
-                    .where(`endTime < :endTime`, { endTime: now })
-                    .execute()
+                .where(`endTime < :endTime`, { endTime: now })
+                .execute()
+                const item = await repository.findOne(key);
                 if (item) {
                     await repository.update(key, { value, createTime: now.toString(), endTime });
                 } else {

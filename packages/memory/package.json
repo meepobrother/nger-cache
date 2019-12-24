@@ -1,6 +1,6 @@
 {
   "name": "@nger/cache.memory",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "> TODO: description",
   "author": "zzh948498 <zhang948498@163.com>",
   "homepage": "https://github.com/zzh948498/nger-cache#readme",
@@ -13,6 +13,10 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org/",
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zzh948498/nger-cache.git"
@@ -24,7 +28,7 @@
     "url": "https://github.com/zzh948498/nger-cache/issues"
   },
   "dependencies": {
-    "@nger/core": "^1.8.20",
+    "@nger/core": "^1.8.31",
     "lru-cache": "^5.1.1"
   },
   "devDependencies": {

@@ -44,4 +44,30 @@ export class PGCacheEntity {
         }
     })
     createTime?: string;
+
+    /**
+	 * 结束时间
+	 */
+    @Column({
+        type: 'timestamptz',
+        nullable: true,
+        transformer: {
+            to: (value: string | null) => {
+                let date = new Date();
+                if (value) {
+                    date = new Date(value);
+                } else {
+                    return null;
+                }
+                return date;
+            },
+            from: (value: Date | null) => {
+                if (!value) {
+                    return ``;
+                }
+                return value.getTime();
+            }
+        }
+    })
+    endTime?: string;
 }

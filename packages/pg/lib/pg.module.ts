@@ -1,5 +1,5 @@
-import { Module, ModuleWithProviders, OnModuleInit, InjectionToken, Injector, Inject, CacheStore } from "@nger/core";
-import { PGCacheOptions, PGCache } from './cache';
+import { Module, ModuleWithProviders, OnModuleInit, InjectionToken, Injector, Inject, CacheStore, Config } from "@nger/core";
+import { PGCacheOptions, PGCache, EnvConfig } from './cache';
 import { ADDON_NAME } from "./repository/def";
 import { Db } from "./repository/db";
 import { createConnection } from "@notadd/magnus-typeorm";
@@ -24,6 +24,9 @@ export class PGModule implements OnModuleInit {
         return {
             ngModule: PGModule,
             providers: [{
+                provide: Config,
+                useClass: EnvConfig
+            }, {
                 provide: ADDON_NAME,
                 useValue: `PGCache`
             }, {
@@ -43,16 +46,15 @@ export class PGModule implements OnModuleInit {
                 ]
             }, {
                 provide: CacheStore,
-                useFactory: (Db: Db) => {
-                    return new PGCache(Db)
+                useFactory: (Db: Db, opt: PGCacheOptions) => {
+                    return new PGCache(Db, opt)
                 },
-                deps: [Db]
+                deps: [Db, PGCACHE_OPTIONS_TOKEN]
             },]
         }
     }
 
     async ngOnModuleInit() {
-        console.log(this.connectName)
         await createConnection({
             type: 'postgres',
             host: this.options.host || 'localhost',

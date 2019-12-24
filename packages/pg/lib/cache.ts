@@ -1,6 +1,12 @@
-import { CacheStore, CacheStoreSetOptions, CacheManagerOptions } from '@nger/core';
+import { CacheStore, CacheStoreSetOptions, CacheManagerOptions, Config, Injectable } from '@nger/core';
 import { Db } from './repository/db';
 import { PGCacheEntity } from './entities/cache';
+@Injectable()
+export class EnvConfig extends Config {
+    get<T>(key: string, def: T): T {
+        return Reflect.get(process.env, key) || def;
+    }
+}
 export interface PGCacheOptions extends CacheManagerOptions {
     host: string;
     port: string;
@@ -9,17 +15,28 @@ export interface PGCacheOptions extends CacheManagerOptions {
     password: string;
 }
 export class PGCache implements CacheStore {
-    constructor(private readonly db: Db) { }
+    constructor(
+        private readonly db: Db,
+        private readonly option: PGCacheOptions
+    ) { }
 
     set<T>(key: string, value: T, options?: CacheStoreSetOptions<T>): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
+
                 const repository = this.db.getConnection().getRepository(PGCacheEntity);
+                const now = new Date();
+                const ttl = (this.option.ttl || 60 * 5) * 1000;
+                const endTime = new Date(now.getTime() + ttl).toString()
                 const item = await repository.findOne(key);
+
+                await repository.createQueryBuilder().delete()
+                    .where(`endTime < :endTime`, { endTime: now })
+                    .execute()
                 if (item) {
-                    await repository.update(key, { value, createTime: new Date().toString() });
+                    await repository.update(key, { value, createTime: now.toString(), endTime });
                 } else {
-                    const entity = repository.create({ key, value });
+                    const entity = repository.create({ key, value, endTime });
                     await repository.insert(entity);
                 }
                 resolve()

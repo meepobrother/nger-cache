@@ -1,0 +1,1 @@
+export const ADDON_NAME = `ADDON NAME`

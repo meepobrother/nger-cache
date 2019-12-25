@@ -2,11 +2,11 @@
     "name": "root",
     "private": true,
     "devDependencies": {
-        "@types/redis": "^2.8.14",
         "lerna": "^3.13.1"
     },
     "dependencies": {
-        "@nger/core": "^1.8.12",
-        "redis": "^2.8.0"
+        "ts-node": "^8.5.4",
+        "tsconfig-paths": "^3.9.0",
+        "typescript": "^3.7.4"
     }
 }

@@ -19,7 +19,16 @@ export class PGCache implements CacheStore {
         private readonly db: Db,
         private readonly option: PGCacheOptions
     ) { }
-
+    /**
+     * 删除过期数据
+     */
+    private async deleteStaleData(): Promise<void> {
+        const now = new Date();
+        const repository = this.db.getConnection().getRepository(PGCacheEntity);
+        await repository.createQueryBuilder().delete()
+            .where(`endTime < :endTime`, { endTime: now })
+            .execute();
+    }
     set<T>(key: string, value: T, options?: CacheStoreSetOptions<T>): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
@@ -29,9 +38,7 @@ export class PGCache implements CacheStore {
                 const ttl = (this.option.ttl || 60 * 5) * 1000;
                 const endTime = new Date(now.getTime() + ttl).toString()
                 // 删除过期数据
-                await repository.createQueryBuilder().delete()
-                .where(`endTime < :endTime`, { endTime: now })
-                .execute()
+                await this.deleteStaleData();
                 const item = await repository.findOne(key);
                 if (item) {
                     await repository.update(key, { value, createTime: now.toString(), endTime });
@@ -48,6 +55,8 @@ export class PGCache implements CacheStore {
     get<T>(key: string): Promise<T | undefined> {
         return new Promise<T | undefined>(async (resolve, reject) => {
             try {
+                // 删除过期数据
+                await this.deleteStaleData();
                 const repository = this.db.getConnection().getRepository(PGCacheEntity);
                 const item = await repository.findOne(key);
                 resolve(item ? item.value as T : undefined);
@@ -59,6 +68,8 @@ export class PGCache implements CacheStore {
     del(key: string): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
+                // 删除过期数据
+                await this.deleteStaleData();
                 const repository = this.db.getConnection().getRepository(PGCacheEntity);
                 await repository.delete(key);
                 resolve();

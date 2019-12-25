@@ -1,17 +1,14 @@
-import { CacheStore, CacheStoreSetOptions, CacheManagerOptions } from '@nger/core';
+import { CacheStore, CacheStoreSetOptions, CacheManagerOptions } from '@nger/cache';
 import LRUCache from "lru-cache";
-export interface MemoryCacheOptions extends CacheManagerOptions {
-    name?: string;
-}
 export class MemoryCache implements CacheStore {
-    constructor(public memoryOptions: MemoryCacheOptions) {
+    cache: LRUCache<any, any>;
+
+    constructor(public memoryOptions: CacheManagerOptions) {
         this.cache = new LRUCache({
-            max: memoryOptions.max || 100,
+            max: memoryOptions.max || 200,
             maxAge: memoryOptions.ttl || 60 * 5
         })
     }
-    cache: LRUCache<any, any>
-
     set<T>(key: string, value: T, options?: CacheStoreSetOptions<T>): Promise<void> {
         return new Promise((resolve, reject) => {
             options = options || {};
@@ -37,7 +34,6 @@ export class MemoryCache implements CacheStore {
 
         })
     }
-
     get<T>(key: string): Promise<T | undefined> {
         return new Promise<T | undefined>((resolve, reject) => {
             try {

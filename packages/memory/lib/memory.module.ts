@@ -1,51 +1,50 @@
-import { Module, ModuleWithProviders, InjectionToken, CacheStore, Self, Optional, SkipSelf } from "@nger/core";
-import { MemoryCacheOptions, MemoryCache } from './cache';
-export const MEMORY_OPTIONS = new InjectionToken<MemoryCacheOptions[]>(`MEMORY_OPTIONS`)
-export const CACHE_CURRENT_NAME = new InjectionToken<string>(`CACHE_CURRENT_NAME`)
-@Module()
-export class MemoryModule {
+import { Module, ModuleWithProviders, InjectionToken, Self, Optional, SkipSelf, Injector } from "@nger/core";
+import { MemoryCache } from './cache';
+import { CacheManagerOptions, CacheStore, CacheModule } from '@nger/cache';
+export const MEMORY_OPTIONS = new InjectionToken<CacheManagerOptions>(`MEMORY_OPTIONS`)
+@Module({
+    imports: [CacheModule]
+})
+export class CacheMemoryModule {
     static hasInstall: boolean = false;
-    static forRoot(options: MemoryCacheOptions): ModuleWithProviders {
-        //当右一个forRoot执行了这个时候再调用时抛错
-        if (this.hasInstall) {
-            throw new Error(``)
-        }
-        this.hasInstall = true;
-        options.name = options.name || 'default';
+    static forRoot(options: CacheManagerOptions | InjectionToken<CacheManagerOptions>): ModuleWithProviders {
         return {
-            ngModule: MemoryModule,
+            ngModule: CacheMemoryModule,
             providers: [{
-                provide: CacheStore,
-                useExisting: MemoryCache
-            },{
-                provide: CACHE_CURRENT_NAME,
-                useValue: options.name
-            }, {
                 provide: MEMORY_OPTIONS,
-                useValue: options,
-                multi: true
+                useFactory: (injector: Injector) => {
+                    return options instanceof InjectionToken ? injector.get(options) : options
+                },
+                deps: [
+                    Injector
+                ]
             }, {
                 provide: CacheStore,
-                useFactory: (name: string, options: MemoryCacheOptions[]) => {
-                    const option = options.find(option => option.name === name)
-                    if (!option) throw new Error(`can not fount cache options ${name}`)
-                    return new MemoryCache(option)
+                useFactory: (options: CacheManagerOptions) => {
+                    return new MemoryCache(options)
                 },
-                deps: [[new Self(), new Optional(), CACHE_CURRENT_NAME], MEMORY_OPTIONS]
+                deps: [MEMORY_OPTIONS]
             }]
         }
     }
 
-    static forFeature(options: MemoryCacheOptions & { name: string }): ModuleWithProviders {
+    static forFeature(options: CacheManagerOptions | InjectionToken<CacheManagerOptions>): ModuleWithProviders {
         return {
-            ngModule: MemoryModule,
+            ngModule: CacheMemoryModule,
             providers: [{
-                provide: CACHE_CURRENT_NAME,
-                useValue: options.name
-            }, {
                 provide: MEMORY_OPTIONS,
-                useValue: options,
-                multi: true
+                useFactory: (injector: Injector) => {
+                    return options instanceof InjectionToken ? injector.get(options) : options
+                },
+                deps: [
+                    Injector
+                ]
+            }, {
+                provide: CacheStore,
+                useFactory: (options: CacheManagerOptions) => {
+                    return new MemoryCache(options)
+                },
+                deps: [MEMORY_OPTIONS]
             }]
         }
     }

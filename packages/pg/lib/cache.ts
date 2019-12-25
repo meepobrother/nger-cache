@@ -38,7 +38,7 @@ export class PGCache implements CacheStore {
                 const ttl = (this.option.ttl || 60 * 5) * 1000;
                 const endTime = new Date(now.getTime() + ttl).toString()
                 // 删除过期数据
-                await this.deleteStaleData();
+                this.deleteStaleData();
                 const item = await repository.findOne(key);
                 if (item) {
                     await repository.update(key, { value, createTime: now.toString(), endTime });
@@ -56,7 +56,7 @@ export class PGCache implements CacheStore {
         return new Promise<T | undefined>(async (resolve, reject) => {
             try {
                 // 删除过期数据
-                await this.deleteStaleData();
+                this.deleteStaleData();
                 const repository = this.db.getConnection().getRepository(PGCacheEntity);
                 const item = await repository.findOne(key);
                 resolve(item ? item.value as T : undefined);
@@ -69,7 +69,7 @@ export class PGCache implements CacheStore {
         return new Promise(async (resolve, reject) => {
             try {
                 // 删除过期数据
-                await this.deleteStaleData();
+                this.deleteStaleData();
                 const repository = this.db.getConnection().getRepository(PGCacheEntity);
                 await repository.delete(key);
                 resolve();

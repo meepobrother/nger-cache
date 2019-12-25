@@ -1,16 +1,11 @@
 {
-  "name": "@nger/cache.file",
-  "version": "1.0.2",
+  "name": "@nger/cache.pg",
+  "version": "1.0.0",
   "description": "> TODO: description",
   "author": "zzh948498 <zhang948498@163.com>",
   "homepage": "https://github.com/zzh948498/nger-cache#readme",
   "license": "ISC",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "publishConfig": {
-    "registry": "http://registry.npmjs.org/",
-    "access": "public"
-  },
+  "main": "lib/cache.pg.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -18,6 +13,9 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zzh948498/nger-cache.git"
@@ -29,10 +27,8 @@
     "url": "https://github.com/zzh948498/nger-cache/issues"
   },
   "dependencies": {
-    "@nger/cache": "^1.0.3",
-    "fs-extra": "^8.1.0"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^8.0.1"
+    "@nger/core": "^1.8.31",
+    "@notadd/magnus-typeorm": "^0.8.21",
+    "pg": "^7.15.1"
   }
 }

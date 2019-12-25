@@ -1,51 +1,50 @@
-import { Module, ModuleWithProviders, InjectionToken, CacheStore, Self, Optional, SkipSelf } from "@nger/core";
-import { FileCacheOptions, FileCache } from './cache';
-export const FILE_OPTIONS = new InjectionToken<FileCacheOptions[]>(`FILE_OPTIONS`)
-export const CACHE_CURRENT_NAME = new InjectionToken<string>(`CACHE_CURRENT_NAME`)
-@Module()
-export class FileModule {
-    static hasInstall: boolean = false;
-    static forRoot(options: FileCacheOptions): ModuleWithProviders {
-        //当右一个forRoot执行了这个时候再调用时抛错
-        if (this.hasInstall) {
-            throw new Error(``)
-        }
-        this.hasInstall = true;
-        options.name = options.name || 'default';
+import { Module, ModuleWithProviders, InjectionToken, Injector } from "@nger/core";
+import { CacheStore, CacheModule } from '@nger/cache'
+import { FileCache, CACHE_PATH } from './cache';
+@Module({
+    imports: [
+        CacheModule
+    ]
+})
+export class CacheFileModule {
+    static forRoot(options: string | InjectionToken<string>): ModuleWithProviders {
         return {
-            ngModule: FileModule,
+            ngModule: CacheFileModule,
             providers: [{
-                provide: CacheStore,
-                useExisting: FileCache
-            }, {
-                provide: CACHE_CURRENT_NAME,
-                useValue: options.name
-            }, {
-                provide: FILE_OPTIONS,
-                useValue: options,
-                multi: true
-            }, {
-                provide: CacheStore,
-                useFactory: (name: string, options: FileCacheOptions[]) => {
-                    const option = options.find(option => option.name === name)
-                    if (!option) throw new Error(`can not fount cache options ${name}`)
-                    return new FileCache(option)
+                provide: CACHE_PATH,
+                useFactory: (injector: Injector) => {
+                    if (options instanceof InjectionToken) {
+                        return injector.get(options)
+                    } else {
+                        return options;
+                    }
                 },
-                deps: [[new Self(), new Optional(), CACHE_CURRENT_NAME], FILE_OPTIONS]
+                deps: [Injector]
+            }, {
+                provide: CacheStore,
+                useFactory: (injector: Injector) => new FileCache(injector),
+                deps: [Injector]
             }]
         }
     }
 
-    static forFeature(options: FileCacheOptions & { name: string }): ModuleWithProviders {
+    static forFeature(options: string | InjectionToken<string>): ModuleWithProviders {
         return {
-            ngModule: FileModule,
+            ngModule: CacheFileModule,
             providers: [{
-                provide: CACHE_CURRENT_NAME,
-                useValue: options.name
+                provide: CACHE_PATH,
+                useFactory: (injector: Injector) => {
+                    if (options instanceof InjectionToken) {
+                        return injector.get(options)
+                    } else {
+                        return options;
+                    }
+                },
+                deps: [Injector]
             }, {
-                provide: FILE_OPTIONS,
-                useValue: options,
-                multi: true
+                provide: CacheStore,
+                useFactory: (injector: Injector) => new FileCache(injector),
+                deps: [Injector]
             }]
         }
     }

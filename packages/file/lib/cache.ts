@@ -1,49 +1,46 @@
-import { CacheStore, CacheStoreSetOptions, CacheManagerOptions } from '@nger/core';
-import { ensureDir, writeJSON, readJSON, remove } from "fs-extra";
-import { join } from "path";
-export interface FileCacheOptions extends CacheManagerOptions {
-    path: string;
-    name?: string;
-}
+import { CacheStore, CacheStoreSetOptions } from '@nger/cache';
+import { ensureDirSync, writeJsonSync, readJsonSync } from "fs-extra";
+import { Injector, InjectionToken } from '@nger/core';
+import { dirname } from "path";
+export const CACHE_PATH = new InjectionToken<string>(`@nger/cache-file CACHE_PATH`)
+
 export class FileCache implements CacheStore {
-    constructor(public cache: FileCacheOptions) { }
-    set<T>(key: string, value: T, options?: CacheStoreSetOptions<T>): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                await ensureDir(this.cache.path);
-                const path = join(this.cache.path , `${key}.json`);
-                await writeJSON(path, value);
-                resolve();
-            } catch (e) {
-                reject(e);
-            }
-        })
+    path: string;
+    constructor(public injector: Injector) {
+        this.ensureDir()
     }
-
-    get<T>(key: string): Promise<T | undefined> {
-        return new Promise<T | undefined>(async (resolve, reject) => {
-            try {
-                await ensureDir(this.cache.path);
-                const path = join(this.cache.path , `${key}.json`);
-                const value = await readJSON(path).catch(() => resolve(undefined));
-                resolve(value as T)
-            } catch (e) {
-                reject(e);
-            }
-        })
-
+    private ensureDir() {
+        this.path = this.injector.get(CACHE_PATH)
+        ensureDirSync(dirname(this.path));
+        const target = this.getJson()
+        if (!target) {
+            writeJsonSync(this.path, { __date__: new Date() }, {
+                encoding: 'utf8'
+            });
+        }
     }
-    del(key: string): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                await ensureDir(this.cache.path);
-                const path = join(this.cache.path , `${key}.json`);
-                await remove(path);
-                resolve()
-            } catch (e) {
-                console.log(e)
-                reject(e);
-            }
-        })
+    private getJson(): any {
+        try {
+            return readJsonSync(this.path, {
+                encoding: 'utf8'
+            })
+        }
+        catch (e) {
+            throw e;
+        }
+    }
+    async set<T>(key: string, value: T, options?: CacheStoreSetOptions<T>): Promise<void> {
+        const target = this.getJson()
+        Reflect.set(target, key, value)
+        writeJsonSync(this.path, target);
+    }
+    async get<T>(key: string): Promise<T | undefined> {
+        const target = this.getJson();
+        return Reflect.get(target, key);
+    }
+    async del(key: string): Promise<void> {
+        const target = this.getJson()
+        delete target.key;
+        writeJsonSync(this.path, target);
     }
 }

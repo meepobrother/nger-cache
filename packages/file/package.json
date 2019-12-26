@@ -1,6 +1,6 @@
 {
   "name": "@nger/cache-file",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "> TODO: description",
   "author": "zzh948498 <zhang948498@163.com>",
   "homepage": "https://github.com/zzh948498/nger-cache#readme",
@@ -8,7 +8,6 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "publishConfig": {
-    "registry": "http://registry.npmjs.org/",
     "access": "public"
   },
   "directories": {

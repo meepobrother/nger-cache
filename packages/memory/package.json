@@ -1,6 +1,6 @@
 {
   "name": "@nger/cache-memory",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "> TODO: description",
   "author": "zzh948498 <zhang948498@163.com>",
   "homepage": "https://github.com/zzh948498/nger-cache#readme",
@@ -14,7 +14,6 @@
     "lib"
   ],
   "publishConfig": {
-    "registry": "http://registry.npmjs.org/",
     "access": "public"
   },
   "repository": {

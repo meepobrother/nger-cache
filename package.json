@@ -5,6 +5,7 @@
         "lerna": "^3.13.1"
     },
     "dependencies": {
+        "@nger/cache": "^1.0.4",
         "ts-node": "^8.5.4",
         "tsconfig-paths": "^3.9.0",
         "typescript": "^3.7.4"

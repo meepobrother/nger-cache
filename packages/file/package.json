@@ -1,6 +1,6 @@
 {
   "name": "@nger/cache-file",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "> TODO: description",
   "author": "zzh948498 <zhang948498@163.com>",
   "homepage": "https://github.com/zzh948498/nger-cache#readme",
@@ -28,7 +28,7 @@
     "url": "https://github.com/zzh948498/nger-cache/issues"
   },
   "dependencies": {
-    "@nger/cache": "^1.0.3",
+    "@nger/cache": "^1.0.5",
     "fs-extra": "^8.1.0"
   },
   "devDependencies": {

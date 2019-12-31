@@ -1,6 +1,6 @@
 {
   "name": "@nger/cache",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "> TODO: description",
   "author": "m18317252500 <m18317252500_1@163.com>",
   "homepage": "https://github.com/meepobrother/nger-cache#readme",
@@ -29,6 +29,6 @@
     "url": "https://github.com/meepobrother/nger-cache/issues"
   },
   "dependencies": {
-    "@nger/core": "^1.8.55"
+    "@nger/core": "^1.9.12"
   }
 }
